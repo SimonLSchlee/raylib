@@ -119,6 +119,7 @@ pub fn addRaylib(b: *std.Build, target: anytype, optimize: std.builtin.OptimizeM
                 raylib.addLibraryPath(.{ .path = "/usr/lib" });
                 raylib.addIncludePath(.{ .path = "/usr/include" });
 
+                raylib.defineCMacro("_GLFW_X11", null);
                 raylib.defineCMacro("PLATFORM_DESKTOP", null);
             } else {
                 raylib.linkSystemLibrary("GLESv2");

@@ -2,9 +2,7 @@ const std = @import("std");
 const builtin = @import("builtin");
 
 // This has been tested with zig version(s):
-// 0.11.0
-// 0.12.0-dev.2075+f5978181e
-// 0.12.0-dev.2990+31763d28c
+// 0.12.0-dev.3594+355cceebc
 //
 // Anytype is used here to preserve compatibility, in 0.12.0dev the std.zig.CrossTarget type
 // was reworked into std.Target.Query and std.Build.ResolvedTarget. Using anytype allows
@@ -119,6 +117,7 @@ pub fn addRaylib(b: *std.Build, target: anytype, optimize: std.builtin.OptimizeM
                 raylib.addLibraryPath(.{ .path = "/usr/lib" });
                 raylib.addIncludePath(.{ .path = "/usr/include" });
 
+                raylib.defineCMacro("_GLFW_X11", null);
                 raylib.defineCMacro("PLATFORM_DESKTOP", null);
             } else {
                 raylib.linkSystemLibrary("GLESv2");
@@ -228,12 +227,12 @@ pub fn build(b: *std.Build) !void {
 
     const lib = try addRaylib(b, target, optimize, options);
 
-    lib.installHeader("src/raylib.h", "raylib.h");
-    lib.installHeader("src/raymath.h", "raymath.h");
-    lib.installHeader("src/rlgl.h", "rlgl.h");
+    lib.installHeader(.{ .path = "src/raylib.h" }, "raylib.h");
+    lib.installHeader(.{ .path = "src/raymath.h" }, "raymath.h");
+    lib.installHeader(.{ .path = "src/rlgl.h" }, "rlgl.h");
 
     if (options.raygui) {
-        lib.installHeader("../raygui/src/raygui.h", "raygui.h");
+        lib.installHeader(.{ .path = "../raygui/src/raygui.h" }, "raygui.h");
     }
 
     b.installArtifact(lib);
